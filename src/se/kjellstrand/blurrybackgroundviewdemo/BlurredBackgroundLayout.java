@@ -119,7 +119,7 @@ public class BlurredBackgroundLayout extends RelativeLayout {
 
         this.isShowingDetails = isShowingDetails;
 
-        activity.getActionBar().hide();
+        //activity.getActionBar().hide();
 
         backgroundImageView = new ImageView(activity);
 
@@ -264,7 +264,7 @@ public class BlurredBackgroundLayout extends RelativeLayout {
         detailsView.setPivotY(0);
 
         detailsView.setX(innerViewStartPos.left);
-        detailsView.setY(innerViewStartPos.top);
+        detailsView.setY(0);
 
         AnimatorSet animSet = new AnimatorSet();
 
@@ -366,18 +366,18 @@ public class BlurredBackgroundLayout extends RelativeLayout {
         darkenAnim.addUpdateListener(darkenUdateListener);
 
         // Get the offset from the top of the screen to the blurSourceView.
-        int[] location = new int[2];
-        getLocationOnScreen(location);
-        final float backgroundInitialY = location[1];
+//        int[] location = new int[2];
+//        getLocationOnScreen(location);
+//        final float backgroundInitialY = 0;//location[1];
 
         AnimatorSet animSet = new AnimatorSet();
-        if (backgroundInitialY != 0) {
-            animSet.playTogether(blurAnim, darkenAnim, //
-                    ObjectAnimator.ofObject(bgImageView, "translationY", new FloatEvaluator(),
-                            backgroundInitialY + startTransY, backgroundInitialY + endTransY));
-        } else {
+//        if (backgroundInitialY != 0) {
+//            animSet.playTogether(blurAnim, darkenAnim, //
+//                    ObjectAnimator.ofObject(bgImageView, "translationY", new FloatEvaluator(),
+//                            backgroundInitialY + startTransY, backgroundInitialY + endTransY));
+//        } else {
             animSet.playTogether(blurAnim, darkenAnim);
-        }
+//        }
         return animSet;
     }
 
@@ -397,7 +397,7 @@ public class BlurredBackgroundLayout extends RelativeLayout {
                 root.removeView(backgroundImageView);
                 root.removeView(detailsView);
                 backgroundImageView.setAlpha(1f);
-                activity.getActionBar().show();
+                //activity.getActionBar().show();
                 isShowingDetails.set(false);
             }
 

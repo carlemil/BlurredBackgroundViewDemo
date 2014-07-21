@@ -2,47 +2,28 @@
 <se.kjellstrand.blurrybackgroundviewdemo.BlurredBackgroundLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:select="http://schemas.android.com/apk/res-auto"
     android:id="@+id/launch_parent"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@drawable/images"
+    android:gravity="center" >
 
-    <GridLayout
-        android:id="@+id/GridLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/images"
-        android:columnCount="1" >
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:scrollbars="none" >
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="118dp"
-            android:layout_column="0"
-            android:layout_gravity="left|center_vertical"
-            android:layout_row="0"
-            android:src="@drawable/ic_launcher" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="98dp"
-            android:layout_height="57dp"
-            android:layout_column="0"
-            android:layout_gravity="center"
-            android:layout_row="0"
-            android:src="@android:drawable/btn_plus" />
-
-        <ProgressBar
-            android:id="@+id/progressBar1"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="148dp"
-            android:layout_height="148dp"
-            android:layout_column="0"
-            android:layout_gravity="right|center_vertical"
-            android:layout_row="0" />
-
-        <AnalogClock
-            android:id="@+id/analogClock1"
-            android:layout_column="0"
-            android:layout_gravity="center_horizontal|top"
-            android:layout_row="0" />
-    </GridLayout>
+        <GridLayout
+            android:id="@+id/grid_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:columnCount="5"
+            android:padding="16dp"
+            android:useDefaultMargins="true" >
+        </GridLayout>
+    </ScrollView>
 
 </se.kjellstrand.blurrybackgroundviewdemo.BlurredBackgroundLayout>

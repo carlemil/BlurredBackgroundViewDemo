@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/details_view"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#ff00ff"
+    android:layout_gravity="center"
+    android:background="#77bbbbbb"
     android:gravity="center"
+    android:orientation="vertical"
     android:paddingBottom="48dp"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
@@ -15,6 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:paddingBottom="16dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingTop="8dp"
@@ -27,7 +30,13 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:gravity="top|left"
+        android:paddingBottom="16dp"
         android:text="Description"
         android:textIsSelectable="false" />
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="200dp"
+        android:layout_height="200dp" />
+
+</LinearLayout>
