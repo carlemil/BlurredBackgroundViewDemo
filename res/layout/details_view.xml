@@ -1,45 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/details_view"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#77bbbbbb"
+    android:orientation="vertical"
+    android:padding="16dp" >
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#77bbbbbb"
-        android:orientation="vertical"
-        android:padding="16dp" >
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="8dp"
+        android:text="H. Rackham"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="260dp"
+        android:layout_height="260dp" />
+
+    <ScrollView
+        android:layout_width="260dp"
+        android:layout_height="120dp"
+        android:paddingTop="8dp" >
 
         <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
+            android:id="@+id/description"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingBottom="8dp"
-            android:text="H. Rackham"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <ImageView
-            android:id="@+id/image_view"
-            android:layout_width="200dp"
-            android:layout_height="200dp" />
-
-        <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="80dp"
-            android:paddingTop="8dp" >
-
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:gravity="top|left"
-                android:paddingBottom="16dp"
-                android:text="But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness."
-                android:textIsSelectable="false" />
-        </ScrollView>
-    </LinearLayout>
+            android:ellipsize="marquee"
+            android:gravity="top|left"
+            android:paddingBottom="16dp"
+            android:text="But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness."
+            android:textIsSelectable="false" />
+    </ScrollView>
 
 </LinearLayout>

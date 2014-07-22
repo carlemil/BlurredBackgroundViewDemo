@@ -3,7 +3,6 @@ package se.kjellstrand.blurrybackgroundviewdemo;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.FloatEvaluator;
@@ -44,13 +43,13 @@ public class BlurredBackgroundLayout extends RelativeLayout {
 
     // The blur radius used on the background at the end of animating in the
     // details view.
-    private static final float BACKGROUND_MAX_BLUR_RADIUS = 6f;
+    private static final float BACKGROUND_MAX_BLUR_RADIUS = 9f;
 
     // Fraction that the background will move north/up while animating in.
     private static final float BACKGROUND_MAX_Y_TRANS_FRACTION = 0.10f;
 
     // Fraction that the background will scale down / move away from the user.
-    private static final float BACKGROUND_MIN_SCALE = 0.97f;
+    private static final float BACKGROUND_MIN_SCALE = 0.95f;
 
     // Fraction that the background will fade towards black while animating in.
     private static final float BACKGROUND_DARKEN_BY_FRACTION = 0.6f;
@@ -100,8 +99,7 @@ public class BlurredBackgroundLayout extends RelativeLayout {
     public void setInnerView(Activity activity, View detailsView, View detailsViewOrigin) {
         this.detailsView = detailsView;
         this.detailsViewOrigin = detailsViewOrigin;
-        final ViewGroup root = (ViewGroup) activity.getWindow().getDecorView()
-                .findViewById(android.R.id.content);
+        final ViewGroup root = (ViewGroup) activity.getWindow().getDecorView().findViewById(android.R.id.content);
         root.addView(detailsView);
     }
 
@@ -119,20 +117,18 @@ public class BlurredBackgroundLayout extends RelativeLayout {
 
         this.isShowingDetails = isShowingDetails;
 
-        //activity.getActionBar().hide();
+        // activity.getActionBar().hide();
 
         backgroundImageView = new ImageView(activity);
 
         // Retrieve the apps content view, will be used to attach the blurred
         // background and the details view to.
-        final ViewGroup root = (ViewGroup) activity.getWindow().getDecorView()
-                .findViewById(android.R.id.content);
+        final ViewGroup root = (ViewGroup) activity.getWindow().getDecorView().findViewById(android.R.id.content);
 
         // Render the visible views to a bitmap to be used for blurring the
         // background while animating.
         Config config = Bitmap.Config.ARGB_8888;
-        final Bitmap inputBitmap = Bitmap.createBitmap(
-                (int) (root.getWidth() * BACKGROUND_SCALE_DOWN_FACTOR),
+        final Bitmap inputBitmap = Bitmap.createBitmap((int) (root.getWidth() * BACKGROUND_SCALE_DOWN_FACTOR),
                 (int) (root.getHeight() * BACKGROUND_SCALE_DOWN_FACTOR), config);
         Canvas canvas = new Canvas(inputBitmap);
         Matrix matrix = new Matrix();
@@ -165,10 +161,13 @@ public class BlurredBackgroundLayout extends RelativeLayout {
                 // Measure the origin of the details view.
                 detailsViewOrigin.getLocationOnScreen(viewCoords);
                 detailsViewStartPos.left = viewCoords[0];
-                detailsViewStartPos.top = viewCoords[1];
+                detailsViewStartPos.top = (int) (viewCoords[1] - root.getY());
                 detailsViewStartPos.right = detailsViewStartPos.left + detailsViewOrigin.getWidth();
-                detailsViewStartPos.bottom = detailsViewStartPos.top
-                        + detailsViewOrigin.getHeight();
+                detailsViewStartPos.bottom = (int) (detailsViewStartPos.top + detailsViewOrigin.getHeight() - root.getY());
+
+                // Center the details view.
+                detailsView.setX(root.getWidth() / 2 - detailsView.getWidth() / 2);
+                detailsView.setY(root.getHeight() / 2 - detailsView.getHeight() / 2 - root.getY());
 
                 // Measure the destination of the details view.
                 detailsView.getLocationOnScreen(viewCoords);
@@ -177,10 +176,10 @@ public class BlurredBackgroundLayout extends RelativeLayout {
                 detailsViewEndPos.right = detailsViewEndPos.left + detailsView.getWidth();
                 detailsViewEndPos.bottom = detailsViewEndPos.top + detailsView.getHeight();
 
+
                 // Start the animation that brings in the details-view and
                 // fades/blurs the background.
-                animateIn(activity, backgroundImageView, root, inputBitmap, outputBitmap,
-                        detailsViewStartPos, detailsViewEndPos);
+                animateIn(activity, backgroundImageView, root, inputBitmap, outputBitmap, detailsViewStartPos, detailsViewEndPos);
 
                 return true;
             }
@@ -197,17 +196,15 @@ public class BlurredBackgroundLayout extends RelativeLayout {
         }
     }
 
-    private void animateIn(final Activity activity, final ImageView bgImageView,
-            final ViewGroup root, final Bitmap inputBitmap, final Bitmap outputBitmap,
-            final Rect innerViewStartPos, final Rect innerViewEndPos) {
+    private void animateIn(final Activity activity, final ImageView bgImageView, final ViewGroup root, final Bitmap inputBitmap,
+            final Bitmap outputBitmap, final Rect innerViewStartPos, final Rect innerViewEndPos) {
 
         // Disable all click listeners while animating.
         setClickListener(root, null);
 
         // Initialize the temporary bitmap if its null or different in size from
         // the input bitmap.
-        if (tmpBitmap == null || tmpBitmap.getHeight() != inputBitmap.getHeight()
-                || tmpBitmap.getWidth() != inputBitmap.getWidth()) {
+        if (tmpBitmap == null || tmpBitmap.getHeight() != inputBitmap.getHeight() || tmpBitmap.getWidth() != inputBitmap.getWidth()) {
             tmpBitmap = Bitmap.createBitmap(inputBitmap);
         }
 
@@ -242,8 +239,8 @@ public class BlurredBackgroundLayout extends RelativeLayout {
                 OnClickListener clickLisstener = new OnClickListener() {
                     @Override
                     public void onClick(View arg0) {
-                        animateOut(activity, backgroundImageView, root, inputBitmap, outputBitmap,
-                                innerViewStartPos, innerViewEndPos);
+                        animateOut(activity, backgroundImageView, root, inputBitmap, outputBitmap, innerViewStartPos,
+                                innerViewEndPos);
                     }
                 };
                 // Enable click listeners as the in animation is finished.
@@ -263,9 +260,6 @@ public class BlurredBackgroundLayout extends RelativeLayout {
         detailsView.setPivotX(0);
         detailsView.setPivotY(0);
 
-        detailsView.setX(innerViewStartPos.left);
-        detailsView.setY(0);
-
         AnimatorSet animSet = new AnimatorSet();
 
         float yTranslate = -getHeight() * BACKGROUND_MAX_Y_TRANS_FRACTION;
@@ -273,18 +267,17 @@ public class BlurredBackgroundLayout extends RelativeLayout {
         animSet.setDuration(IN_OUT_ANIMATION_DURATION);
         // Syncronize the animations
         animSet.playTogether(
-                getBgAnimatorSet(blurAnim, bgImageView, 0, yTranslate, 1f,
-                        BACKGROUND_DARKEN_BY_FRACTION),//
-                getFgAnimatorSet(FOREGROUND_FADE_FRACTION, 1f, scale, 1f, innerViewStartPos.left,
-                        innerViewEndPos.left, innerViewStartPos.top, innerViewEndPos.top));
+                getBgAnimatorSet(blurAnim, bgImageView, 0, yTranslate, 1f, BACKGROUND_DARKEN_BY_FRACTION),//
+                getFgAnimatorSet(FOREGROUND_FADE_FRACTION, 1f, scale, 1f, //
+                        innerViewStartPos.left, innerViewEndPos.left,//
+                        innerViewStartPos.top, innerViewEndPos.top));
 
         // Play the animations.
         animSet.start();
     }
 
-    private void animateOut(final Activity activity, final ImageView bgImageView,
-            final ViewGroup root, final Bitmap inputBitmap, final Bitmap outputBitmap,
-            Rect innerViewStartPos, Rect innerViewEndPos) {
+    private void animateOut(final Activity activity, final ImageView bgImageView, final ViewGroup root, final Bitmap inputBitmap,
+            final Bitmap outputBitmap, Rect innerViewStartPos, Rect innerViewEndPos) {
 
         // Prevent multiple clicks causing multiple animateOut calls resulting
         // in broken animations
@@ -316,10 +309,9 @@ public class BlurredBackgroundLayout extends RelativeLayout {
         float scale = (float) innerViewStartPos.width() / innerViewEndPos.width();
         fgAndBgAnimSet.setDuration(IN_OUT_ANIMATION_DURATION);
         fgAndBgAnimSet.playTogether(
-                getBgAnimatorSet(blurAnim, bgImageView, yTranslate, 0,
-                        BACKGROUND_DARKEN_BY_FRACTION, 1f), //
-                getFgAnimatorSet(1f, FOREGROUND_FADE_FRACTION, 1f, scale, innerViewEndPos.left,
-                        innerViewStartPos.left, innerViewEndPos.top, innerViewStartPos.top));
+                getBgAnimatorSet(blurAnim, bgImageView, yTranslate, 0, BACKGROUND_DARKEN_BY_FRACTION, 1f), //
+                getFgAnimatorSet(1f, FOREGROUND_FADE_FRACTION, 1f, scale, innerViewEndPos.left, innerViewStartPos.left,
+                        innerViewEndPos.top, innerViewStartPos.top));
 
         AnimatorSet animSet = new AnimatorSet();
         animSet.playTogether(fgAndBgAnimSet, getFadeOutAnimatorSet(bgImageView));
@@ -331,30 +323,26 @@ public class BlurredBackgroundLayout extends RelativeLayout {
         AnimatorSet fadeOutAnim = new AnimatorSet();
         fadeOutAnim.setDuration(FADE_OUT_ANIMATION_DURATION);
         fadeOutAnim.setStartDelay(IN_OUT_ANIMATION_DURATION - FADE_OUT_ANIMATION_DURATION);
-        fadeOutAnim.playTogether(ObjectAnimator.ofObject(bgImageView, "alpha",
-                new FloatEvaluator(), 1f, 0f));
+        fadeOutAnim.playTogether(ObjectAnimator.ofObject(bgImageView, "alpha", new FloatEvaluator(), 1f, 0f));
         return fadeOutAnim;
     }
 
-    private AnimatorSet getFgAnimatorSet(float alphaStart, float alphaEnd, float scaleStart,
-            float scaleEnd, float xStart, float xEnd, float yStart, float yEnd) {
+    private AnimatorSet getFgAnimatorSet(float alphaStart, float alphaEnd, float scaleStart, float scaleEnd, float xStart,
+            float xEnd, float yStart, float yEnd) {
         AnimatorSet animSet = new AnimatorSet();
-        animSet.playTogether(ObjectAnimator.ofObject(detailsView, "alpha", new FloatEvaluator(),
-                alphaStart, alphaEnd),//
+        animSet.playTogether(ObjectAnimator.ofObject(detailsView, "alpha", new FloatEvaluator(), alphaStart, alphaEnd),//
                 ObjectAnimator.ofObject(detailsView, "x", new FloatEvaluator(), xStart, xEnd),//
                 ObjectAnimator.ofObject(detailsView, "y", new FloatEvaluator(), yStart, yEnd),//
-                ObjectAnimator.ofObject(detailsView, "scaleX", new FloatEvaluator(), scaleStart,
-                        scaleEnd),//
-                ObjectAnimator.ofObject(detailsView, "scaleY", new FloatEvaluator(), scaleStart,
-                        scaleEnd));
+                ObjectAnimator.ofObject(detailsView, "scaleX", new FloatEvaluator(), scaleStart, scaleEnd),//
+                ObjectAnimator.ofObject(detailsView, "scaleY", new FloatEvaluator(), scaleStart, scaleEnd));
         return animSet;
     }
 
-    private AnimatorSet getBgAnimatorSet(Animator blurAnim, final ImageView bgImageView,
-            float startTransY, float endTransY, float startDarken, float endDarken) {
+    private AnimatorSet getBgAnimatorSet(Animator blurAnim, final ImageView bgImageView, float startTransY, float endTransY,
+            float startDarken, float endDarken) {
 
         ValueAnimator darkenAnim = ValueAnimator.ofFloat(startDarken, endDarken);
-        AnimatorUpdateListener darkenUdateListener = new AnimatorUpdateListener() {
+        AnimatorUpdateListener darkenUpdateListener = new AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator va) {
                 float fraction = (Float) va.getAnimatedValue();
@@ -363,26 +351,27 @@ public class BlurredBackgroundLayout extends RelativeLayout {
                 bgImageView.setColorFilter(color, Mode.MULTIPLY);
             }
         };
-        darkenAnim.addUpdateListener(darkenUdateListener);
+        darkenAnim.addUpdateListener(darkenUpdateListener);
 
         // Get the offset from the top of the screen to the blurSourceView.
-//        int[] location = new int[2];
-//        getLocationOnScreen(location);
-//        final float backgroundInitialY = 0;//location[1];
+        // int[] location = new int[2];
+        // getLocationOnScreen(location);
+        // final float backgroundInitialY = 0;//location[1];
 
         AnimatorSet animSet = new AnimatorSet();
-//        if (backgroundInitialY != 0) {
-//            animSet.playTogether(blurAnim, darkenAnim, //
-//                    ObjectAnimator.ofObject(bgImageView, "translationY", new FloatEvaluator(),
-//                            backgroundInitialY + startTransY, backgroundInitialY + endTransY));
-//        } else {
-            animSet.playTogether(blurAnim, darkenAnim);
-//        }
+        // if (backgroundInitialY != 0) {
+        // animSet.playTogether(blurAnim, darkenAnim, //
+        // ObjectAnimator.ofObject(bgImageView, "translationY", new
+        // FloatEvaluator(),
+        // backgroundInitialY + startTransY, backgroundInitialY + endTransY));
+        // } else {
+        animSet.playTogether(blurAnim, darkenAnim);
+        // }
         return animSet;
     }
 
-    private AnimatorListener getFinishAnimatorListener(final Activity activity,
-            final ImageView backgroundImageView, final ViewGroup root) {
+    private AnimatorListener getFinishAnimatorListener(final Activity activity, final ImageView backgroundImageView,
+            final ViewGroup root) {
         return new AnimatorListener() {
             @Override
             public void onAnimationStart(Animator arg0) {
@@ -397,7 +386,7 @@ public class BlurredBackgroundLayout extends RelativeLayout {
                 root.removeView(backgroundImageView);
                 root.removeView(detailsView);
                 backgroundImageView.setAlpha(1f);
-                //activity.getActionBar().show();
+                // activity.getActionBar().show();
                 isShowingDetails.set(false);
             }
 
