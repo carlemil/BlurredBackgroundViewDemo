@@ -46,17 +46,17 @@ public class BlurredBackgroundLayout extends RelativeLayout {
     private static final float BACKGROUND_MAX_BLUR_RADIUS = 9f;
 
     // Fraction that the background will move north/up while animating in.
-    private static final float BACKGROUND_MAX_Y_TRANS_FRACTION = 0.10f;
+    private static final float BACKGROUND_MAX_Y_TRANS_FRACTION = 0.05f;
 
     // Fraction that the background will scale down / move away from the user.
     private static final float BACKGROUND_MIN_SCALE = 0.95f;
 
     // Fraction that the background will fade towards black while animating in.
-    private static final float BACKGROUND_DARKEN_BY_FRACTION = 0.6f;
+    private static final float BACKGROUND_DARKEN_BY_FRACTION = 0.8f;
 
     // Factor that we scale down the background before applying blur and other
     // effects, the lower this value is the faster the effects can be applied.
-    private static final float BACKGROUND_SCALE_DOWN_FACTOR = 0.25f;
+    private static final float BACKGROUND_SCALE_DOWN_FACTOR = 0.15f;
 
     // Fraction to fade the details view from and to.
     private static final float FOREGROUND_FADE_FRACTION = 0.1f;
