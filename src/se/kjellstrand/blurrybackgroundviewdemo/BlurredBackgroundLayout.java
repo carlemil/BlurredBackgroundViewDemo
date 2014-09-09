@@ -43,7 +43,7 @@ public class BlurredBackgroundLayout extends RelativeLayout {
 
     // The blur radius used on the background at the end of animating in the
     // details view.
-    private static final float BACKGROUND_MAX_BLUR_RADIUS = 9f;
+    private static final float BACKGROUND_MAX_BLUR_RADIUS = 16f;
 
     // Fraction that the background will move north/up while animating in.
     private static final float BACKGROUND_MAX_Y_TRANS_FRACTION = 0.05f;
@@ -59,7 +59,7 @@ public class BlurredBackgroundLayout extends RelativeLayout {
     private static final float BACKGROUND_SCALE_DOWN_FACTOR = 0.15f;
 
     // Fraction to fade the details view from and to.
-    private static final float FOREGROUND_FADE_FRACTION = 0.1f;
+    private static final float FOREGROUND_FADE_FRACTION = 0.2f;
 
     // AtomicBoolean that indicates if the details view is visible or not.
     private AtomicBoolean isShowingDetails;
